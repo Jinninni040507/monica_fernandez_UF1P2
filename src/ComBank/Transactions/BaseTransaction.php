@@ -9,9 +9,18 @@
 
 use ComBank\Exceptions\InvalidArgsException;
 use ComBank\Exceptions\ZeroAmountException;
+use ComBank\Transactions\Contracts\BankTransactionInterface;
 use ComBank\Support\Traits\AmountValidationTrait;
 
 abstract class BaseTransaction
 {
+    use AmountValidationTrait;
+    protected float $amount;
     
+    public function __construct(float $amount) 
+    {
+        $this->validateAmount($amount);
+
+        $this->amount = $amount;
+    }
 }
