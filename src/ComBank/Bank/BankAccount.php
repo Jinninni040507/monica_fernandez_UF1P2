@@ -18,17 +18,19 @@ use ComBank\OverdraftStrategy\Contracts\OverdraftInterface;
 use ComBank\Support\Traits\AmountValidationTrait;
 use ComBank\Transactions\Contracts\BankTransactionInterface;
 
+
 class BankAccount implements BackAccountInterface
 {
-    // AmountValidationTrait
+// AmountValidationTrait
     use AmountValidationTrait;
 
-
+// Class Attributes
     private $balance;
     private $status;
     private $overdraft;
 
 
+// Constructor
     public function __construct(float $newBalance = 0.0) {
         $this->validateAmount($newBalance);
         $this->setBalance($newBalance);
@@ -36,16 +38,8 @@ class BankAccount implements BackAccountInterface
         $this->overdraft = new NoOverdraft();
     }
 
-    /**
-     * Make a transaction
-     */
-    public function transaction(BankTransactionInterface $Transaction):void{
-        if ($this->status == BackAccountInterface::STATUS_CLOSED) {
-            throw new BankAccountException("Account is closed, transaction cannot be made");
-        }
-        $Transaction->applyTransaction($this);
-    }
 
+// Methods
     /**
      * Open an account
      */
@@ -72,13 +66,33 @@ class BankAccount implements BackAccountInterface
      * Close an account
      */
     public function closeAccount(): void{
-        if ($this->status != 'OPEN') {
-            # code...
-        } else {
+        if ($this->status == BackAccountInterface::STATUS_OPEN) {
             $this->setStatus(BackAccountInterface::STATUS_CLOSED);
+        } else {
+            throw new BankAccountException("This account is already closed.");
         }
     }
 
+    /**
+     * Apply Overdraft
+     */
+    public function applyOverdraft($OverdraftInterface): void{
+        $this->overdraft = $OverdraftInterface;
+    }
+
+    /**
+     * Make a transaction
+     */
+    public function transaction(BankTransactionInterface $Transaction):void{
+        if ($this->status == BackAccountInterface::STATUS_CLOSED) {
+            throw new BankAccountException("Account is closed, transaction cannot be made");
+        }
+        $Transaction->applyTransaction($this);
+    }
+
+
+// Getters & Setters
+    // Getters
     /**
      * Get the value of balance
      */ 
@@ -95,12 +109,7 @@ class BankAccount implements BackAccountInterface
         return $this->overdraft;
     }
 
-    /**
-     * Apply Overdraft
-     */
-    public function applyOverdraft($OverdraftInterface): void{
-        $this->overdraft = $OverdraftInterface;
-    }
+    // Setters
 
     /**
      * Set the value of balance
@@ -113,14 +122,6 @@ class BankAccount implements BackAccountInterface
     }
 
     /**
-     * Get the value of status
-     */ 
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
      * Set the value of status
      *
      * @return  self
@@ -129,7 +130,6 @@ class BankAccount implements BackAccountInterface
     {
         $this->status = $status;
     }
-
 
     /**
      * Set the value of overdraft
@@ -140,4 +140,5 @@ class BankAccount implements BackAccountInterface
     {
         $this->overdraft = $overdraft;
     }
+
     }

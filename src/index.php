@@ -29,11 +29,10 @@ try {
     pl("My balance : ". $bankAccount1->getBalance());
     // close account
     $bankAccount1->closeAccount();
-    pl("My status : ". $bankAccount1->getStatus());
+    pl('My account is now closed.');
     // reopen account
     $bankAccount1->reopenAccount();
-    pl("My status : ". $bankAccount1->getStatus());
-
+    pl('My account is now reopened.');
 
     // deposit +150 
     
@@ -119,8 +118,12 @@ try {
 }
 pl('My new balance after withdrawal (-20) with funds : ' . $bankAccount2->getBalance());
 
+$bankAccount2->closeAccount();
+pl('My account is now closed.');
+
 try {
-   
+    $bankAccount2->closeAccount();
+
 } catch (BankAccountException $e) {
     pl($e->getMessage());
 }
