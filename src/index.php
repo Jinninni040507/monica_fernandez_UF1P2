@@ -111,6 +111,8 @@ pl('My balance after failed last transaction : ' . $bankAccount2->getBalance());
 
 try {
     pl('Doing transaction withdrawal (-20) with current balance : ' . $bankAccount2->getBalance());
+
+    $bankAccount2->transaction(new WithdrawTransaction(20));
     
 } catch (FailedTransactionException $e) {
     pl('Error transaction: ' . $e->getMessage());
