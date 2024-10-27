@@ -63,7 +63,8 @@ try {
 }
 pl('My balance after failed last transaction : ' . $bankAccount1->getBalance());
 
-
+$bankAccount1->closeAccount();
+pl('My account is now closed.');
 
 
 //---[Bank account 2]---/
@@ -102,6 +103,7 @@ try {
     pl('Doing transaction withdrawal (-120) with current balance ' . $bankAccount2->getBalance());
 
     $bankAccount2->transaction(new WithdrawTransaction(120));
+
     
 } catch (FailedTransactionException $e) {
     pl('Error transaction: ' . $e->getMessage());
